@@ -165,3 +165,41 @@ After generating the keys and adding the Nix code:
 2. Run `home-manager switch` on each machine in the fleet.
 
 This will distribute the public keys and ensure every machine authorizes the new set of keys.
+
+---
+
+## 6. Password and Passphrase Strategy
+
+To complement the SSH key system and address the "first unlock" problem after a reboot, a tiered passphrase strategy is essential. This avoids the security risk of reusing a single master password across all machines and services.
+
+The core principle is to isolate risk. A compromise of a less-secure environment (like a work machine) should not compromise the keys to the entire digital kingdom (the password manager).
+
+### The Tiered Model
+
+We will use three distinct, high-entropy passphrases based on the [Diceware method](https://www.eff.org/dice) (e.g., `correct-horse-battery-staple`).
+
+#### Tier 1: The Vault Key (Most Sacred)
+- **Purpose**: To unlock your password manager (e.g., 1Password, Bitwarden).
+- **Characteristics**: A unique, 6+ word Diceware passphrase.
+- **Usage**: This key is used **only** for the password manager. It should not be used for any other login. Day-to-day access to the vault should be through biometrics (Face ID, Touch ID, etc.).
+- **Backup**: Memorize it. This is the one passphrase you must commit to long-term memory.
+
+#### Tier 2: The Personal Fleet Key
+- **Purpose**: The login password for your trusted, personal machines (`scholomance`, `murderbot`, `culture`).
+- **Characteristics**: A different, 5+ word Diceware passphrase.
+- **Usage**: It's acceptable to reuse this passphrase across your personal machines as you control their security environment.
+- **Backup**: Store this passphrase securely **inside your password manager**. You do not need to have it perfectly memorized. After a reboot, you can look it up in your vault to perform the first unlock.
+
+#### Tier 3: The Work Key
+- **Purpose**: The login password for your work machine (`microserfs`).
+- **Characteristics**: Another unique, 5+ word Diceware passphrase.
+- **Usage**: This passphrase is used **only** for the work machine to ensure complete isolation between your personal and professional security domains.
+- **Backup**: Store this passphrase securely **inside your password manager**.
+
+### Summary Table
+
+| Item | Passphrase Tier | Example | Where It's Used | Primary Backup |
+| :--- | :--- | :--- | :--- | :--- |
+| Password Manager | **Tier 1: Vault Key** | `gargantuan-silo-nomad-revolt...` | Master password for the vault. | **Your Brain** |
+| Personal Machines | **Tier 2: Fleet Key** | `eager-pelican-rodeo-treason...` | Login for `scholomance`, `murderbot`, `culture`. | Password Manager |
+| Work Machine | **Tier 3: Work Key** | `staple-archive-ferry-tundra...` | Login for `microserfs`. | Password Manager |
