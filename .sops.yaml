@@ -1,0 +1,5 @@
+---
+creation_rules:
+  - path_regex: .*\.sops\.yaml$
+    gcp_kms: >- 
+      projects/nix-dotfiles/locations/global/keyRings/sops-keyring/cryptoKeys/sops-key

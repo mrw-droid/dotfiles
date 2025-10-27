@@ -1,0 +1,4 @@
+Host github.com
+  User git
+  AddKeysToAgent yes
+  IdentityFile /home/mrw/.ssh/mrw-droid-github
