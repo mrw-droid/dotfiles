@@ -17,7 +17,14 @@
       source = ./ssh/mrw-droid-github.pub;
     };
     ".ssh/authorized_keys" = {
-      source = ./ssh/mrw-droid-github.pub;
+      text =
+        let
+          authorizedKeysDir = ./ssh/authorized_keys;
+          keyFiles = builtins.attrNames (builtins.readDir authorizedKeysDir);
+          pubKeyFiles = builtins.filter (file: builtins.match ".*\\.pub" file != null) keyFiles;
+          keys = builtins.map (keyFile: builtins.readFile (authorizedKeysDir + "/${keyFile}")) pubKeyFiles;
+        in
+          builtins.concatStringsSep "\n" keys;
     };
   };
 
