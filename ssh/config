@@ -2,3 +2,7 @@ Host github.com
   User git
   AddKeysToAgent yes
   IdentityFile /home/mrw/.ssh/mrw-droid-github
+Host *.vaquita-carp.ts.net
+  PKCS11Provider /usr/lib/pkcs11/libtpm2_pkcs11.so
+  IdentityAgent none
+

@@ -16,6 +16,9 @@
     ".ssh/mrw-droid-github.pub" = {
       source = ./ssh/mrw-droid-github.pub;
     };
+    ".ssh/authorized_keys" = {
+      source = ./ssh/mrw-droid-github.pub;
+    };
   };
 
   xdg.configFile = {
@@ -31,19 +34,16 @@
 
   programs.ssh = {
     enable = true;
-    authorizedKeys.keys =
-      let
-        # Path to your public keys, relative to the flake root.
-        authorizedKeysDir = ./ssh/authorized_keys;
-
-        # Read all .pub files in that directory and build a list of their contents.
-        keyFiles = builtins.filter (file: builtins.match ".*\\.pub" file != null)
-          (builtins.attrNames (builtins.readDir authorizedKeysDir));
-
-        # Return a list of the contents of each key file
-        keys = builtins.map (keyFile: builtins.readFile (authorizedKeysDir + "/${keyFile}")) keyFiles;
-      in
-        keys;
+    enableDefaultConfig = false;
+    matchBlocks = {
+      "*" = {
+        extraOptions = {
+          "IdentitiesOnly" = "yes";
+          "SendEnv" = "LANG LC_*";
+          "HashKnownHosts" = "yes";
+        };
+      };
+    };
   };
 
   ### SSH Keys and Config ###
