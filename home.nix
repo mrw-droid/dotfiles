@@ -16,16 +16,43 @@
     ".ssh/mrw-droid-github.pub" = {
       source = ./ssh/mrw-droid-github.pub;
     };
+    ".ssh/authorized_keys" = {
+      text =
+        let
+          authorizedKeysDir = ./ssh/authorized_keys;
+          keyFiles = builtins.attrNames (builtins.readDir authorizedKeysDir);
+          pubKeyFiles = builtins.filter (file: builtins.match ".*\\.pub" file != null) keyFiles;
+          keys = builtins.map (keyFile: builtins.readFile (authorizedKeysDir + "/${keyFile}")) pubKeyFiles;
+        in
+          builtins.concatStringsSep "\n" keys;
+    };
   };
 
   xdg.configFile = {
     "zed/settings.json" = {
       source = ./zed/settings.json;
     };
+    "zed/keymap.json" = {
+      source = ./zed/keymap.json;
+    };
 
     # This manages ~/.config/fish/
     "fish/config.fish" = {
       source = ./fish/config.fish;
+    };
+  };
+
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks = {
+      "*" = {
+        extraOptions = {
+          "IdentitiesOnly" = "yes";
+          "SendEnv" = "LANG LC_*";
+          "HashKnownHosts" = "yes";
+        };
+      };
     };
   };
 

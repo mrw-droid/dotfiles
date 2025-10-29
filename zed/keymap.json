@@ -1,0 +1,9 @@
+[
+  {
+    "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting",
+    "bindings": {
+      "ctrl-/": "workspace::FindNext",
+      "ctrl-?": "workspace::FindPrevious"
+    }
+  }
+]
