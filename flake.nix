@@ -31,8 +31,22 @@
       ];
     };
 
-    # mrw-rl (work laptop)
     # scholomance (m2u)
+    homeConfigurations."scholomance" = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+      extraSpecialArgs = { hostname = "scholomance"; };
+      modules = [
+        self.myHomeModule
+        sops-nix.homeManagerModules.sops
+        {
+          home.username = "mrw";
+          home.homeDirectory = "/Users/mrw";
+          home.stateVersion = "24.05";
+        }
+      ];
+    };
+
+    # mrw-rl (work laptop)
     # culture (home laptop)
   };
 }
